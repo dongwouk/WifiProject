@@ -1,0 +1,29 @@
+.input {
+	margin-bottom: 10px;
+}
+
+/*---------- 테이블 ------------ */
+table, td, th {
+	border: 1px solid #dadad8;
+	padding: 15px 1px;
+}
+
+table {
+	width: 100%;
+	border-collapse: collapse;
+	border-spacing: 0 1rem;
+}
+
+th {
+	font-size: 12px;
+	color: white;
+	background-color: #029d5f;
+}
+
+td {
+	height: 100%;
+	text-align: center;
+	color: black;
+	font-size: 12px;
+}
+/*---------- 테이블 ------------ */
