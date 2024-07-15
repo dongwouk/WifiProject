@@ -30,4 +30,5 @@
 ERD(DB설계)
 ---
 
+![image](https://github.com/user-attachments/assets/d1d86248-7769-458f-a849-b705a4a9041f)
 
