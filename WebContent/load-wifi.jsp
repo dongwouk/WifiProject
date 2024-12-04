@@ -15,7 +15,7 @@
 	<%--와이파이 개수 --%>
 	<%
 		OpenApi apiService = new OpenApi();
-	int count = apiService.WifiInfo();
+	int count = apiService.getWifiCount();
 	%>
 
 	<%--와이파이 개수 디스플레이 --%>
@@ -26,7 +26,7 @@
 		<div style="text-align: center;">
 			<h1 style="margin: 20px 0"><%=count%>건의 데이터를 성공적으로 저장했습니다.
 			</h1>
-			<a href="http://localhost:8090/WiFiList/test.jsp">홈으로 돌아가기</a>
+			<a href="http://localhost:8090/WiFiList/main.jsp">홈으로 돌아가기</a>
 		</div>
 		<%
 			} else {

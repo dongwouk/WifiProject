@@ -1,95 +1,74 @@
 package DAO;
 
-import java.sql.*;
-import java.text.DateFormatSymbols; //
-import java.text.SimpleDateFormat; //
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-import DB.testDB;
+import DB.connectionDB;
 import DTO.HistoryDTO;
 
 public class HistoryDAO {
-	public static Connection connection;
-	public static PreparedStatement preparedStatement;
-	public static ResultSet resultSet;
 
-	public static void searchHistory(String lat, String lnt) {
+    // 히스토리 추가 메서드
+    public void insertHistory(String lat, String lnt) {
+        String sql = "INSERT INTO history (lat, lnt, date) VALUES (?, ?, datetime('now','localtime'))";
 
-		connection = null;
-		preparedStatement = null;
-		resultSet = null;
+        try (Connection connection = connectionDB.connectDB();
+             PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
 
-		try {
-			connection = testDB.connectDB();
+            preparedStatement.setString(1, lat);
+            preparedStatement.setString(2, lnt);
 
-			String sql = " insert into history " + " (lat, lnt, date) "
-					+ " values ( ?, ?, datetime('now','localtime') )";
+            preparedStatement.executeUpdate();
+            System.out.println("데이터가 삽입 완료되었습니다.");
 
-			preparedStatement = connection.prepareStatement(sql);
+        } catch (SQLException e) {
+            System.err.println("히스토리 삽입 중 오류 발생: " + e.getMessage());
+        }
+    }
 
-			preparedStatement.setString(1, lat);
-			preparedStatement.setString(2, lnt);
+    // 히스토리 목록 조회 메서드
+    public List<HistoryDTO> searchHistoryList() {
+        List<HistoryDTO> list = new ArrayList<>();
+        String sql = "SELECT * FROM history ORDER BY id DESC";
 
-			preparedStatement.executeUpdate();
+        try (Connection connection = connectionDB.connectDB();
+             PreparedStatement preparedStatement = connection.prepareStatement(sql);
+             ResultSet resultSet = preparedStatement.executeQuery()) {
 
-			System.out.println("데이터가 삽입 완료되었습니다.");
+            while (resultSet.next()) {
+                HistoryDTO historyDTO = new HistoryDTO(
+                        resultSet.getInt("id"),
+                        resultSet.getString("lat"),
+                        resultSet.getString("lnt"),
+                        resultSet.getString("date")
+                );
+                list.add(historyDTO);
+            }
 
-		} catch (SQLException e) {
-			e.printStackTrace();
-		} finally {
-			testDB.close(connection, preparedStatement, resultSet);
-		}
-	}
+        } catch (SQLException e) {
+            System.err.println("히스토리 목록 조회 중 오류 발생: " + e.getMessage());
+        }
 
-	public List<HistoryDTO> searchHistoryList() {
-		List<HistoryDTO> list = new ArrayList<>();
+        return list;
+    }
 
-		connection = null;
-		preparedStatement = null;
-		resultSet = null;
+    // 히스토리 삭제 메서드
+    public void deleteHistoryList(String id) {
+        String sql = "DELETE FROM history WHERE id = ?";
 
-		try {
-			connection = testDB.connectDB();
-			String sql = " select * " + " from history " + " order by id desc ";
+        try (Connection connection = connectionDB.connectDB();
+             PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
 
-			preparedStatement = connection.prepareStatement(sql);
-			resultSet = preparedStatement.executeQuery();
+            preparedStatement.setInt(1, Integer.parseInt(id));
+            preparedStatement.executeUpdate();
+            System.out.println("삭제 완료");
 
-			while (resultSet.next()) {
-				HistoryDTO historyDTO = new HistoryDTO(resultSet.getInt("id"), resultSet.getString("lat"),
-						resultSet.getString("lnt"), resultSet.getString("date"));
-				list.add(historyDTO);
-			}
-		} catch (SQLException e) {
-			e.printStackTrace();
-		} finally {
-			testDB.close(connection, preparedStatement, resultSet);
-		}
-
-		return list;
-	}
-
-	public void deleteHistoryList(String id) {
-
-		connection = null;
-		preparedStatement = null;
-		resultSet = null;
-
-		try {
-			connection = testDB.connectDB();
-			String sql = "delete from history where id = ? ";
-
-			preparedStatement = connection.prepareStatement(sql);
-			preparedStatement.setInt(1, Integer.parseInt(id));
-			preparedStatement.executeUpdate();
-
-			System.out.println("삭제 완료");
-
-		} catch (SQLException e) {
-			e.printStackTrace();
-		} finally {
-			testDB.close(connection, preparedStatement, resultSet);
-		}
-	}
+        } catch (SQLException e) {
+            System.err.println("히스토리 삭제 중 오류 발생: " + e.getMessage());
+        }
+    }
 }

@@ -14,7 +14,7 @@
 </head>
 <body>
 	<h1>와이파이 히스토리 목록</h1>
-	<a href="http://localhost:8090/WiFiList/test.jsp">홈</a>
+	<a href="http://localhost:8090/WiFiList/main.jsp">홈</a>
 	<a href="#">|</a>
 	<a href="http://localhost:8090/WiFiList/history.jsp">위치 히스토리 목록</a>
 	<a href="#">|</a>
